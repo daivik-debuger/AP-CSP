@@ -1,1 +1,5 @@
 print("hello world")
+Name=input("users name -")
+print(Name)
+age=int(input("age -"))
+print("you are",age,"years old")
