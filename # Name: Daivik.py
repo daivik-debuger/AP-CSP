@@ -1,18 +1,22 @@
 # Name: Daivik
-# Program Summary: Lets the user view, add, remove, and search for songs.
 
-# These lists keep the songs and their times.
+# Song names.
+
 songs = [
     "Lose My Mind", "Just Keep Watching", "Drive", "Messy",
     "Bad as I Used To Be", "Blinding Lights", "Levitating",
     "As It Was", "Believer", "Shape of You"
 ]
 
-# These are the song times in seconds. They are approximate.
+# Song times in seconds.
 durations = [209, 142, 190, 179, 227, 200, 203, 167, 204, 233]
 
 
-# This shows minutes and seconds.
+# Chosen songs.
+chosen_songs = []
+
+
+# Show minutes and seconds.
 def show_duration(seconds):
     minutes = seconds // 60
     leftover_seconds = seconds % 60
@@ -22,9 +26,9 @@ def show_duration(seconds):
         return str(minutes) + ":" + str(leftover_seconds)
 
 
-# This prints the songs and the total time.
+# Show songs and total time.
 def display_playlist():
-    print("\n---------- MY PLAYLIST ----------")
+    print("\n---------- SONG LIBRARY ----------")
     if len(songs) == 0:
         print("There are no songs yet.")
     else:
@@ -41,33 +45,54 @@ def display_playlist():
         print("Total time:", show_duration(total))
 
 
-# This loop keeps the menu running.
+# Show chosen songs.
+def display_chosen():
+    print("\n---------- MY FINAL PLAYLIST ----------")
+    if len(chosen_songs) == 0:
+        print("You have not chosen any songs. Use option 10 to choose songs.")
+    else:
+        print("No.  Song                          Time")
+        print("---------------------------------------")
+        total = 0
+        for i in range(len(chosen_songs)):
+            position = songs.index(chosen_songs[i])
+            number = str(i + 1) + "."
+            print(number.ljust(5) + chosen_songs[i].ljust(30) + "  " +
+                  show_duration(durations[position]))
+            total += durations[position]
+        print("---------------------------------------")
+        print("Number of songs:", len(chosen_songs))
+        print("Total time:", show_duration(total))
+
+
+# Repeat the menu.
 while True:
     print("\n---------- SONG MENU ----------")
-    print("1. Show my playlist")
+    print("1. Show all songs in the library")
     print("2. Longest song time")
     print("3. Shortest song time")
     print("4. Longest song name")
     print("5. Shortest song name")
-    print("6. Add a song")
-    print("7. Remove a song")
+    print("6. Add a new song to the library")
+    print("7. Remove a song from the library")
     print("8. Search for a song")
     print("9. Show final playlist and exit")
+    print("10. Choose a song for my playlist")
 
-    choice = input("Choose an option (1-9): ").strip()
+    choice = input("Choose an option (1-10): ").strip()
 
-    # Check if the choice is 1 to 9.
-    if choice not in ("1", "2", "3", "4", "5", "6", "7", "8", "9"):
-        print("Invalid choice. Enter a number from 1 to 9.")
+    # Check the menu choice.
+    if choice not in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"):
+        print("Invalid choice. Enter a number from 1 to 10.")
         continue
 
-    # Show the final list and quit.
+    # Show chosen songs and quit.
     if choice == "9":
-        display_playlist()
+        display_chosen()
         print("Goodbye!")
         break
 
-    # Check if the song list is empty.
+    # Check for an empty list.
     if len(songs) == 0 and choice != "6":
         print("The playlist is empty. Choose option 6 to add a song.")
         continue
@@ -76,7 +101,7 @@ while True:
     if choice == "1":
         display_playlist()
 
-    # Find the longest or shortest song.
+    # Find the longest or shortest time.
     elif choice == "2" or choice == "3":
         best = 0
         for i in range(len(durations)):
@@ -86,8 +111,9 @@ while True:
                 best = i
         print(songs[best] + " - " + show_duration(durations[best]))
 
-    # Find the longest or shortest song name.
-    # Spaces count. If two names tie, show the first one.
+    # Find the longest or shortest name.
+    
+    # Count spaces. Show the first name if tied.
     elif choice == "4" or choice == "5":
         best = 0
         for i in range(len(songs)):
@@ -101,22 +127,22 @@ while True:
     elif choice == "6":
         new_song = input("Enter the song title: ").strip()
 
-        # Don't add an empty song.
+        # Check for an empty name.
         if new_song == "":
             print("The song title cannot be blank.")
             continue
 
-        # Check if the song is already there.
+        # Check for repeats.
         duplicate = False
         for song in songs:
             if song.lower() == new_song.lower():
                 duplicate = True
 
         if duplicate:
-            print("That song is already in the playlist.")
+            print("That song is already in the library. Use option 10 to choose it.")
             continue
 
-        # Keep asking until you get a valid time.
+        # Check the song time.
         while True:
             duration_text = input("Enter duration in seconds (example: 180): ").strip()
             try:
@@ -126,14 +152,14 @@ while True:
                 else:
                     print("Duration must be greater than zero.")
             except ValueError:
-                print("Please enter a whole number of seconds.")
+                print("Enter a whole number of seconds.")
 
         songs.append(new_song)
         durations.append(new_duration)
-        print("Song added! Updated playlist:")
+        print("Song added! Updated library:")
         display_playlist()
 
-    # Remove the song.
+    # Remove the song and its time.
     elif choice == "7":
         title = input("Enter the full song title to remove: ").strip()
         if title == "":
@@ -148,12 +174,15 @@ while True:
         if position == -1:
             print("That song was not found.")
         else:
+            # Remove it from chosen songs too.
+            if songs[position] in chosen_songs:
+                chosen_songs.remove(songs[position])
             songs.pop(position)
             durations.pop(position)
-            print("Song and duration removed! Updated playlist:")
+            print("Song and duration removed! Updated library:")
             display_playlist()
 
-    # Search for a word in the song names.
+    # Search for a word.
     elif choice == "8":
         word = input("Enter a word to search for: ").strip().lower()
         if word == "":
@@ -168,4 +197,25 @@ while True:
 
         if not found:
             print("No songs contain that word.")
-            
+
+
+    # Choose a song.
+    elif choice == "10":
+        title = input("Enter the full song title to choose: ").strip()
+        if title == "":
+            print("The song title cannot be blank.")
+            continue
+
+        position = -1
+        for i in range(len(songs)):
+            if songs[i].lower() == title.lower():
+                position = i
+
+        if position == -1:
+            print("That song was not found. Use option 1 to see the library.")
+        elif songs[position] in chosen_songs:
+            print("You already chose that song.")
+        else:
+            chosen_songs.append(songs[position])
+            print("Song chosen!")
+            display_chosen()
