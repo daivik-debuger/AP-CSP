@@ -1,4 +1,5 @@
 # Name: Daivik lakkisetty naga
+#Class: 1st period
 # AP CSP - Cookie Sales Loops Assignment
 
 # lists for the student names and the boxes they sold
