@@ -2,7 +2,7 @@ FoodItems = ["Pizza", "Burger", "Salad", "Tacos", "Pasta", "Sushi", "Hot Dog", "
 Prices = [8.99, 6.49, 4.25, 7.50, 5.99, 9.75, 3.99, 2.50, 6.75, 1.99]
 NewOrOld = ["new", "old", "new", "old", "new", "old", "new", "new", "old", "old"]
 
-# 1. Find all NEW items
+
 new_items = []
 for i in range(len(FoodItems)):
     if NewOrOld[i] == "new":
@@ -11,15 +11,15 @@ for i in range(len(FoodItems)):
 print("The cafeteria has added the following items to the menu:")
 print(new_items)
 
-# 2. Find NEW items below $5
+
 cheap_new_items = []
 for i in range(len(FoodItems)):
     if NewOrOld[i] == "new" and Prices[i] < 5:
         cheap_new_items.append(FoodItems[i])
 
 print(cheap_new_items)
+e
 
-# 3. Combine the last 3 characters of the name with the price
 combined_list = []
 for i in range(len(FoodItems)):
     suffix = FoodItems[i][-3:]
