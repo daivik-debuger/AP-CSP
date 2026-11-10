@@ -1,4 +1,5 @@
 # Name: Daivik Lakkisetty Naga
+
 def choose(prompt, options):
     answer = input(prompt).strip()
     if answer in options:
@@ -155,3 +156,4 @@ else:
     print("Run the game again to try another adventure.")
 
 print("========================================")
+
