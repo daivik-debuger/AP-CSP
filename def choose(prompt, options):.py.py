@@ -12,7 +12,7 @@ items = ["Flashlight", "Gas mask", "Rope", "Crowbar", "Map", "Keycard"]
 lives = 3
 won = False
 
-print("\n========================================")
+print("\n=========================================")
 print("          ESCAPE THE BUNKER")
 print("========================================")
 print("You wake up in an underground emergency shelter.")

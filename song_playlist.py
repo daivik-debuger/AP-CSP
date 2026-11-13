@@ -18,7 +18,7 @@ for i in range(len(FoodItems)):
         cheap_new_items.append(FoodItems[i])
 
 print(cheap_new_items)
-e
+
 
 combined_list = []
 for i in range(len(FoodItems)):
