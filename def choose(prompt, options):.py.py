@@ -1,159 +1,166 @@
-# Name: Daivik Lakkisetty Naga
-
 def choose(prompt, options):
-    answer = input(prompt).strip()
-    if answer in options:
-        return answer
-    print("That choice is not available. You did not lose a life.")
-    return choose("Type " + " or ".join(options) + ": ", options)
+    ans = input(prompt).strip().lower()
+    while ans not in options:
+        print("Invalid choice! Choose: " + " or ".join(options))
+        ans = input(prompt).strip().lower()
+    return ans
 
+items = ["Flashlight", "Gas Mask", "Medkit", "Crowbar", "Bunker Map", "Keycard"]
+lives = 10
+win = False
 
-items = ["Flashlight", "Gas mask", "Rope", "Crowbar", "Map", "Keycard"]
-lives = 3
-won = False
+print("\n==================================================")
+print("             ESCAPE THE BUNKER")
+print("==================================================")
+print("You awaken deep inside a collapsing underground bunker.")
+print("Your objective: Navigate through 5 sectors and reach the surface ALIVE!")
+print("You start with 10 lives. Fatal mistakes cost 1 life.")
 
-print("\n=========================================")
-print("          ESCAPE THE BUNKER")
-print("========================================")
-print("You wake up in an underground emergency shelter.")
-print("An alarm warns that the shelter is no longer safe.")
-print("Your goal: get through 5 rooms and reach the surface.")
-
-print("\nHOW TO PLAY")
-print("Type the number beside your choice, then press Enter.")
-print("Read carefully. Each room contains clues.")
-print("You start with 3 lives. A deadly choice costs 1 life.")
-print("After a death, restart and choose your items again.")
-print("Escape to win. Lose all 3 lives and the game ends.")
-
-for attempt in range(3):
+while not win and lives > 0:
     inventory = []
-    available = ["1", "2", "3", "4", "5", "6"]
+    options_indices = [str(i + 1) for i in range(len(items))]
 
-    print("\n========== PACK YOUR BAG ==========")
-    print("A sign reads: TOXIC GAS AHEAD. BRING A GAS MASK.")
-    print("Pick 3 different items, one number at a time.")
-    print("The flashlight and map provide extra clues.")
-    print("The other items are spare equipment.")
-
-    for number in range(6):
-        print(str(number + 1) + ". " + items[number])
+    print("\n" + "=" * 50)
+    print("                PACK YOUR BACKPACK")
+    print("=" * 50)
+    print("Select 3 distinct items from the armory:")
+    for i in range(len(items)):
+        print(str(i + 1) + ". " + items[i])
 
     for pick in range(3):
-        print("\nItems still to choose:", 3 - pick)
-        print("Available numbers: " + ", ".join(available))
-        number = choose("Type an item number: ", available)
-        item = items[int(number) - 1]
-        inventory.append(item)
-        available.remove(number)
-        print(item + " added!")
+        print("\nPicks remaining:", 3 - pick)
+        print("Available numbers: " + ", ".join(options_indices))
+        selected_idx = choose("Enter item number: ", options_indices)
+        chosen_item = items[int(selected_idx) - 1]
+        inventory.append(chosen_item)
+        options_indices.remove(selected_idx)
+        print("Added [" + chosen_item + "] to your backpack.")
 
-    for level in range(1, 6):
-        print("\n----------------------------------------")
-        print("ROOM", level, "OF 5 | LIVES LEFT:", lives)
-        print("YOUR ITEMS: " + ", ".join(inventory))
-        print("----------------------------------------")
+    levels = [
+        {
+            "num": 1,
+            "type": "path",
+            "title": "LEVEL 1: THE SPLIT TUNNEL (PATH)",
+            "desc": "Two dark tunnels stretch out before you.\n1. Left: Narrow maintenance duct with rattling pipes.\n2. Right: Flooded passageway with dangling electrical cables.",
+            "clue_item": "Bunker Map",
+            "clue": "The map marks the Left duct as structurally dry and safe.",
+            "safe": ["1", "left"],
+            "death": "You stepped into the water! A live electrical cable electrocuted you.",
+            "success": "You crawled safely through the duct to the next area."
+        },
+        {
+            "num": 2,
+            "type": "extra",
+            "title": "LEVEL 2: THE ALCHEMY & MED-BAY (EXTRA FEATURE)",
+            "desc": "You find a lab with two glowing potions:\n1. Blue Elixir (shimmers with blue restorative light)\n2. Red Serum (hisses and bubbles with dark fumes)",
+            "loot": "Adrenaline Shot"
+        },
+        {
+            "num": 3,
+            "type": "path",
+            "title": "LEVEL 3: THE GENERATOR VAULT (PATH)",
+            "desc": "A nuclear reactor turbine is rumbling with intense pressure.\n1. Left: Upper steel catwalk running along the ceiling.\n2. Right: Narrow shortcut right beside the vibrating turbine.",
+            "clue_item": "Flashlight",
+            "clue": "Your beam illuminates a hazard sign: 'DANGER: HIGH PRESSURE STEAM LEAK'.",
+            "safe": ["1", "left"],
+            "death": "A high-pressure steam pipe ruptured as you ran past!",
+            "success": "You crossed the elevated catwalk safely."
+        },
+        {
+            "num": 4,
+            "type": "item_check",
+            "title": "LEVEL 4: DECONTAMINATION AIRLOCK (INVENTORY CHECK)",
+            "desc": "The blast doors seal tight! Poisonous green chlorine gas fills the air.",
+            "required_item": "Gas Mask",
+            "success": "You put on your Gas Mask and breathe clean filtered air.",
+            "death": "You do not have a Gas Mask! The toxic gas overwhelms you."
+        },
+        {
+            "num": 5,
+            "type": "path",
+            "title": "LEVEL 5: THE SURFACE ACCESS SHAFT (FINAL PATH)",
+            "desc": "Daylight beams down from above!\n1. Left: Reinforced steel ladder bolted to the wall.\n2. Right: Decaying cable elevator marked 'OUT OF ORDER'.",
+            "clue_item": "",
+            "clue": "",
+            "safe": ["1", "left"],
+            "death": "The elevator cables snapped and plummeted down the shaft!",
+            "success": "You climbed the ladder to the surface into the sunlight!"
+        }
+    ]
+
+    for room in levels:
+        print("\n" + "-" * 50)
+        print("LEVEL " + str(room["num"]) + " OF 5 | LIVES REMAINING: " + str(lives))
+        print("YOUR INVENTORY: " + ", ".join(inventory))
+        print("-" * 50)
+
         safe = True
 
-        if level == 1:
-            print("THE TWO TUNNELS")
-            print("Two tunnels lead away from the entrance.")
-            print("Exposed wires hang over a flooded passage.")
-
-            if "Map" in inventory:
-                print("Your map marks the maintenance tunnel as safe.")
-
-            print("1. Take the maintenance tunnel")
-            print("2. Walk through the flooded passage")
-
-            if choose("Which tunnel? Type 1 or 2: ", ["1", "2"]) == "2":
-                print("You step into electrified water!")
+        if room["type"] == "path":
+            print(room["title"])
+            print(room["desc"])
+            if room["clue_item"] in inventory:
+                print(">> CLUE (" + room["clue_item"] + "): " + room["clue"])
+            decision = choose("Which path do you choose? (1/2 or left/right): ", ["1", "2", "left", "right"])
+            if decision not in room["safe"]:
+                print("\n[!] " + room["death"])
                 safe = False
             else:
-                print("You safely reach a locked door.")
+                print("\n[+] " + room["success"])
+                if room["num"] == 5:
+                    win = True
 
-        elif level == 2:
-            print("THE LOCKED DOOR")
-            print("A keypad controls the door to the next room.")
-            print("Its screen reads: 2, 4, 6, ?")
-            print("Enter the next number in the pattern.")
-            print("Warning: a wrong answer activates a deadly trap.")
-
-            if input("Enter the next number: ").strip() == "8":
-                print("ACCESS GRANTED. The door opens.")
+        elif room["type"] == "extra":
+            print(room["title"])
+            print(room["desc"])
+            potion = choose("Which potion do you drink? (1 for Blue / 2 for Red): ", ["1", "2", "blue", "red"])
+            if potion in ["1", "blue"]:
+                lives += 2
+                print("\n[+] REJUVENATION: You drank the blue elixir and gained +2 lives! Lives: " + str(lives))
             else:
-                print("Wrong code! The security trap activates.")
-                safe = False
+                lives -= 1
+                print("\n[-] POISON: Acidic liquid burned your throat! You lost 1 life! Lives: " + str(lives))
+                if lives <= 0:
+                    safe = False
 
-        elif level == 3:
-            print("THE GENERATOR ROOM")
-            print("A damaged generator throws sparks across the room.")
-            print("You must reach the door on the other side.")
+            if safe:
+                print("\nYou also found an [" + room["loot"] + "] on the counter.")
+                pickup = choose("Add [" + room["loot"] + "] to inventory? (yes/no): ", ["yes", "no", "y", "n"])
+                if pickup in ["yes", "y"]:
+                    inventory.append(room["loot"])
+                    print("-> Added [" + room["loot"] + "] to your inventory!")
 
-            if "Flashlight" in inventory:
-                print("Your flashlight reveals a sign:")
-                print("SAFE WALKWAY ALONG WALL.")
-
-            print("1. Follow the marked walkway")
-            print("2. Take a shortcut beside the generator")
-
-            if choose("Which route? Type 1 or 2: ", ["1", "2"]) == "2":
-                print("The generator explodes as you pass!")
-                safe = False
+        elif room["type"] == "item_check":
+            print(room["title"])
+            print(room["desc"])
+            input("Press Enter to check your backpack for safety gear...")
+            if room["required_item"] in inventory:
+                print("\n[+] INVENTORY CHECK SUCCESS: " + room["success"])
             else:
-                print("You follow the walkway and reach the door safely.")
-
-        elif level == 4:
-            print("THE GAS CHAMBER")
-            print("Toxic gas fills the chamber.")
-            print("The only way forward is through this room.")
-            input("Press Enter to check your bag for a gas mask: ")
-
-            if "Gas mask" in inventory:
-                print("You put on your gas mask and cross safely.")
-            else:
-                print("You have no gas mask. The toxic gas overwhelms you.")
+                print("\n[!] INVENTORY CHECK FAILED: " + room["death"])
                 safe = False
-
-        elif level == 5:
-            print("THE FINAL EXIT")
-            print("Daylight shines above a ladder.")
-            print("Beside it is an elevator marked OUT OF ORDER.")
-            print("1. Climb the ladder")
-            print("2. Try the broken elevator")
-
-            if choose("How will you escape? Type 1 or 2: ", ["1", "2"]) == "2":
-                print("The elevator cables snap!")
-                safe = False
-            else:
-                print("You climb the ladder and open the hatch.")
-                print("You step outside into the sunlight!")
-                won = True
 
         if not safe:
             lives -= 1
-            print("\nYou died and lost 1 life.")
-            print("Lives remaining:", lives)
-
+            print("\n" + "!" * 50)
+            print("YOU DIED! You lost 1 life.")
+            print("Lives remaining: " + str(lives))
+            print("!" * 50)
             if lives > 0:
-                input("Press Enter to restart and choose your items again: ")
+                input("Press Enter to return to the bunker entrance and try again: ")
+            break
+        elif not win:
+            input("\nRoom cleared! Press Enter to proceed to the next room: ")
 
-            
-
-        elif not won:
-            input("Room complete! Press Enter to continue: ")
-
-    if won:
-        break
-
-print("\n========================================")
-
-if won:
-    print("              YOU ESCAPED!")
-    print("Lives remaining:", lives)
+print("\n" + "=" * 50)
+if win:
+    print("                 YOU ESCAPED! YOU WIN!")
+    print("=" * 50)
+    print("Congratulations! You survived and reached the surface.")
+    print("Remaining Lives: " + str(lives))
+    print("Final Items: " + ", ".join(inventory))
 else:
-    print("          GAME OVER. NO LIVES LEFT.")
-    print("Run the game again to try another adventure.")
-
-print("========================================")
-
+    print("            GAME OVER: OUT OF LIVES!")
+    print("=" * 50)
+    print("The bunker collapsed entirely. You did not make it out.")
+print("=" * 50 + "\n")
