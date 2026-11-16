@@ -21,7 +21,7 @@ while not win and lives > 0:
     options_indices = [str(i + 1) for i in range(len(items))]
 
     print("\n" + "=" * 50)
-    print("                PACK YOUR BACKPACK")
+    print("               PACK YOUR BACKPACK")
     print("=" * 50)
     print("Select 3 distinct items from the armory:")
     for i in range(len(items)):
