@@ -1,3 +1,8 @@
+#Escape the Bunker
+# Name: Daivik Lakkisetty Naga
+# Date: 11/16/2026
+# AP CSP Period 1
+
 def choose(prompt, options):
     ans = input(prompt).strip().lower()
     while ans not in options:
