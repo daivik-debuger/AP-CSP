@@ -1,8 +1,9 @@
-#Escape the Bunker
+# Escape the Bunker
 # Name: Daivik Lakkisetty Naga
-# Date: 11/16/2026
+# Date: 11/12/2026
 # AP CSP Period 1
 
+# Function to get a valid choice from the player
 def choose(prompt, options):
     ans = input(prompt).strip().lower()
     while ans not in options:
@@ -10,10 +11,12 @@ def choose(prompt, options):
         ans = input(prompt).strip().lower()
     return ans
 
+# Game setup variables
 items = ["Flashlight", "Gas Mask", "Medkit", "Crowbar", "Bunker Map", "Keycard"]
 lives = 10
 win = False
 
+# Print game introduction
 print("\n==================================================")
 print("             ESCAPE THE BUNKER")
 print("==================================================")
@@ -21,10 +24,12 @@ print("You awaken deep inside a collapsing underground bunker.")
 print("Your objective: Navigate through 5 sectors and reach the surface ALIVE!")
 print("You start with 10 lives. Fatal mistakes cost 1 life.")
 
+# Main game loop that runs until you win or lose all lives
 while not win and lives > 0:
     inventory = []
     options_indices = [str(i + 1) for i in range(len(items))]
 
+    # Let the player pick 3 items out of 6
     print("\n" + "=" * 50)
     print("               PACK YOUR BACKPACK")
     print("=" * 50)
@@ -41,6 +46,7 @@ while not win and lives > 0:
         options_indices.remove(selected_idx)
         print("Added [" + chosen_item + "] to your backpack.")
 
+    # Data for all 5 levels
     levels = [
         {
             "num": 1,
@@ -93,6 +99,7 @@ while not win and lives > 0:
         }
     ]
 
+    # Play through each level one by one
     for room in levels:
         print("\n" + "-" * 50)
         print("LEVEL " + str(room["num"]) + " OF 5 | LIVES REMAINING: " + str(lives))
@@ -101,6 +108,7 @@ while not win and lives > 0:
 
         safe = True
 
+        # Handle path levels (Levels 1, 3, and 5)
         if room["type"] == "path":
             print(room["title"])
             print(room["desc"])
@@ -115,6 +123,7 @@ while not win and lives > 0:
                 if room["num"] == 5:
                     win = True
 
+        # Handle extra room with potions and loot (Level 2)
         elif room["type"] == "extra":
             print(room["title"])
             print(room["desc"])
@@ -135,6 +144,7 @@ while not win and lives > 0:
                     inventory.append(room["loot"])
                     print("-> Added [" + room["loot"] + "] to your inventory!")
 
+        # Handle inventory check room (Level 4)
         elif room["type"] == "item_check":
             print(room["title"])
             print(room["desc"])
@@ -145,6 +155,7 @@ while not win and lives > 0:
                 print("\n[!] INVENTORY CHECK FAILED: " + room["death"])
                 safe = False
 
+        # If player died, lose 1 life and restart from the beginning
         if not safe:
             lives -= 1
             print("\n" + "!" * 50)
@@ -157,6 +168,7 @@ while not win and lives > 0:
         elif not win:
             input("\nRoom cleared! Press Enter to proceed to the next room: ")
 
+# Final win or game over screens
 print("\n" + "=" * 50)
 if win:
     print("                 YOU ESCAPED! YOU WIN!")
