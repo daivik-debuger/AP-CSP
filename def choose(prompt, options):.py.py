@@ -77,6 +77,7 @@ while not win and lives > 0:
             "death": "A high-pressure steam pipe ruptured as you ran past!",
             "success": "You crossed the elevated catwalk safely."
         },
+        
         {
             "num": 4,
             "type": "item_check",
